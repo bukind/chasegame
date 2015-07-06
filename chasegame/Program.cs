@@ -40,8 +40,9 @@ namespace chasegame
 		private Timer timer;
 		private DateTime t0;
 		private Bitmap imageCross;
-		private Bitmap imageSpark;
+		private List<Bitmap> images;
 		private List<Sprite> sprites;
+		private int curimage;
 
 		public TheInput(Form parent)
 		{
@@ -52,13 +53,24 @@ namespace chasegame
 
 			try {
 				imageCross = new Bitmap("../../cross.png");
-				imageSpark = new Bitmap("../../spark.png");
+				images = new List<Bitmap>();
+				images.Add(new Bitmap("../../spark.png"));
+				images.Add(new Bitmap("../../katya-head.png"));
+				images.Add(new Bitmap("../../nastya-head.png"));
 			} catch (Exception e) {
 				Console.WriteLine("cannot load images:" + e.Message);
 				Environment.Exit(1);
 			}
 			t0 = DateTime.Now;
 			sprites = new List<Sprite>();
+			var s = new Sprite();
+			s.x = 0;
+			s.y = 0;
+			s.dx = 0;
+			s.dy = 0;
+			s.image = images[0];
+			curimage = 0;
+			sprites.Add(s);
 
 			KeyUp += new KeyEventHandler(this.OnKeyUp);
 			MouseDown += new MouseEventHandler(this.OnMouseDown);
@@ -79,6 +91,20 @@ namespace chasegame
 			if (a.KeyCode == Keys.Escape) {
 				U.show("Ended");
 				Environment.Exit(0);
+			} else if (a.KeyCode == Keys.Left) {
+				curimage -= 1;
+				if (curimage < 0) {
+					curimage = images.Count;
+				}
+				sprites[0].image = images[curimage];
+			} else if (a.KeyCode == Keys.Right) {
+				curimage += 1;
+				if (curimage >= images.Count) {
+					curimage = 0;
+				}
+				sprites[0].image = images[curimage];
+			} else if (a.KeyCode == Keys.Back) {
+				sprites.RemoveRange(1, sprites.Count - 1);
 			}
 		}
 
@@ -108,9 +134,9 @@ namespace chasegame
 				s.y = (float)(mouseDownLocation.Y + imageCross.Size.Height / 2.0);
 				s.dx = (float)((a.Location.X - s.x) / 100.0);
 				s.dy = (float)((a.Location.Y - s.y) / 100.0);
-				s.x -= (float)(imageSpark.Size.Width / 2.0);
-				s.y -= (float)(imageSpark.Size.Height / 2.0);
-				s.image = imageSpark;
+				s.image = sprites[0].image;
+				s.x -= (float)(s.image.Size.Width / 2.0);
+				s.y -= (float)(s.image.Size.Height / 2.0);
 				sprites.Add(s);
 				mouseDownLocation = new Point();
 				mouseLastLocation = mouseDownLocation;
