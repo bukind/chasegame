@@ -103,6 +103,7 @@ namespace chasegame
 		private List<Bitmap> images;
 		private List<Sprite> sprites;
 		private int curimage;
+		private Random random;
 
 		public TheInput(Form parent)
 		{
@@ -125,6 +126,7 @@ namespace chasegame
 			sprites = new List<Sprite>();
 			sprites.Add(new Sprite(images[0], 0.0F));
 			curimage = 0;
+			random = new Random();
 
 			KeyUp += new KeyEventHandler(this.OnKeyUp);
 			MouseDown += new MouseEventHandler(this.OnMouseDown);
@@ -186,9 +188,17 @@ namespace chasegame
 				var s = new Sprite(sprites[0].image, 0.0F);
 				s.x = (float)mouseDownLocation.X;
 				s.y = (float)mouseDownLocation.Y;
-				s.dx = (float)((a.Location.X - s.x) / 100.0);
-				s.dy = (float)((a.Location.Y - s.y) / 100.0);
-				s.omega = (DateTime.Now.Millisecond - 500) / 100000.0F;
+				s.dx = (float)((a.Location.X - s.x) / 5.0);
+				s.dy = (float)((a.Location.Y - s.y) / 5.0);
+				if (Math.Sqrt(s.dx * s.dx + s.dy * s.dy) < 0.1) {
+					double alpha = Math.PI * 2.0 * random.NextDouble();
+					var cosa = Math.Cos(alpha);
+					var sina = Math.Sin(alpha);
+					double speed = random.NextDouble()*100.0 + 10.0;
+					s.dx = (float)(cosa * speed);
+					s.dy = (float)(sina * speed);
+				}
+				s.omega = (float)(random.NextDouble() - 0.5) * 10.0F;
 				sprites.Add(s);
 				mouseDownLocation = new Point();
 				mouseLastLocation = mouseDownLocation;
@@ -206,7 +216,7 @@ namespace chasegame
 		private void move()
 		{
 			var now = DateTime.Now;
-			var dt = now.Subtract(t0).TotalMilliseconds;
+			var dt = now.Subtract(t0).TotalMilliseconds / 1000.0;
 			foreach (Sprite s in sprites) {
 				s.Move(dt);
 			}
