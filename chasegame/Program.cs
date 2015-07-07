@@ -190,11 +190,11 @@ namespace chasegame
 				s.y = (float)mouseDownLocation.Y;
 				s.dx = (float)((a.Location.X - s.x) / 5.0);
 				s.dy = (float)((a.Location.Y - s.y) / 5.0);
-				if (Math.Sqrt(s.dx * s.dx + s.dy * s.dy) < 0.1) {
+				if (Math.Sqrt(s.dx * s.dx + s.dy * s.dy) < 20.0) {
 					double alpha = Math.PI * 2.0 * random.NextDouble();
 					var cosa = Math.Cos(alpha);
 					var sina = Math.Sin(alpha);
-					double speed = random.NextDouble()*100.0 + 10.0;
+					double speed = random.NextDouble() * 80.0 + 30.0;
 					s.dx = (float)(cosa * speed);
 					s.dy = (float)(sina * speed);
 				}
@@ -202,6 +202,12 @@ namespace chasegame
 				sprites.Add(s);
 				mouseDownLocation = new Point();
 				mouseLastLocation = mouseDownLocation;
+			} else if (a.Button == MouseButtons.Right) {
+				curimage += 1;
+				if (curimage >= images.Count) {
+					curimage = 0;
+				}
+				sprites[0] = new Sprite(images[curimage], 0.0F);
 			}
 		}
 
