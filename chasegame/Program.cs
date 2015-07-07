@@ -25,11 +25,71 @@ namespace chasegame
 
 	class Sprite
 	{
-		public float x;
+		public float x; // position of the image center
 		public float y;
-		public float dx;
+		public float dx; // speed
 		public float dy;
+		public float alpha; // current angle (radians)
+		public float omega; // rotation speed
+		public float mass;  // the mass
+		public float scale; // scaling factor (recalculated from the mass)
+		public float radius; // current radius (recalculated from image size and scaling factor)
 		public Bitmap image;
+
+		public Sprite(Bitmap theimg, float themass)
+		{
+			image = theimg;
+			dx = dy = alpha = omega = 0.0F;
+			// init is the initial radius
+			float init = Math.Min(image.Size.Width, image.Size.Height) * 0.5F;
+			if (themass <= 0.001F) {
+				themass = init * init;
+			}
+			mass = themass;
+			scale = (float)(Math.Sqrt(mass) / init) * 0.5F;
+			radius = init * 2 * scale;
+			x = image.Size.Width * scale;
+			y = image.Size.Height * scale;
+		}
+
+		public void Move(double dt)
+		{
+			x += (float)(dx * dt);
+			y += (float)(dy * dt);
+			alpha += (float)(omega * dt);
+			if (dx < 0) {
+				if (x < radius) {
+					x = radius * 2 - x;
+					dx = -dx;
+				}
+			} else if (x >= U.WX - radius) {
+				x = (U.WX - radius) * 2 - x;
+				dx = -dx;
+			}
+			if (dy < 0) {
+				if (y < radius) {
+					y = radius * 2 - y;
+					dy = -dy;
+				}
+			} else if (y >= U.WY - radius) {
+				y = (U.WY - radius) * 2 - y;
+				dy = -dy;
+			}
+		}
+
+		public void Draw(Graphics g)
+		{
+			PointF[] dest = new PointF[3];
+			float cosa = (float)Math.Cos(alpha);
+			float sina = (float)Math.Sin(alpha);
+			var wx = image.Size.Width * scale;
+			var wy = image.Size.Height * scale;
+			// x + px*cosa+py*sina, y - px*sina + py*cosa 
+			dest[0] = new PointF(x - wx * cosa - wy * sina, y + wx * sina - wy * cosa);
+			dest[1] = new PointF(x + wx * cosa - wy * sina, y - wx * sina - wy * cosa);
+			dest[2] = new PointF(x - wx * cosa + wy * sina, y + wx * sina + wy * cosa);
+			g.DrawImage(image, dest);
+		}
 	}
 
 
@@ -63,14 +123,8 @@ namespace chasegame
 			}
 			t0 = DateTime.Now;
 			sprites = new List<Sprite>();
-			var s = new Sprite();
-			s.x = 0;
-			s.y = 0;
-			s.dx = 0;
-			s.dy = 0;
-			s.image = images[0];
+			sprites.Add(new Sprite(images[0], 0.0F));
 			curimage = 0;
-			sprites.Add(s);
 
 			KeyUp += new KeyEventHandler(this.OnKeyUp);
 			MouseDown += new MouseEventHandler(this.OnMouseDown);
@@ -94,15 +148,15 @@ namespace chasegame
 			} else if (a.KeyCode == Keys.Left) {
 				curimage -= 1;
 				if (curimage < 0) {
-					curimage = images.Count;
+					curimage = images.Count - 1;
 				}
-				sprites[0].image = images[curimage];
+				sprites[0] = new Sprite(images[curimage], 0.0F);
 			} else if (a.KeyCode == Keys.Right) {
 				curimage += 1;
 				if (curimage >= images.Count) {
 					curimage = 0;
 				}
-				sprites[0].image = images[curimage];
+				sprites[0] = new Sprite(images[curimage], 0.0F);
 			} else if (a.KeyCode == Keys.Back) {
 				sprites.RemoveRange(1, sprites.Count - 1);
 			}
@@ -129,14 +183,12 @@ namespace chasegame
 		{
 			if (a.Button == MouseButtons.Left && !mouseDownLocation.IsEmpty) {
 				U.show("OnMouseUp");
-				var s = new Sprite();
-				s.x = (float)(mouseDownLocation.X + imageCross.Size.Width / 2.0);
-				s.y = (float)(mouseDownLocation.Y + imageCross.Size.Height / 2.0);
+				var s = new Sprite(sprites[0].image, 0.0F);
+				s.x = (float)mouseDownLocation.X;
+				s.y = (float)mouseDownLocation.Y;
 				s.dx = (float)((a.Location.X - s.x) / 100.0);
 				s.dy = (float)((a.Location.Y - s.y) / 100.0);
-				s.image = sprites[0].image;
-				s.x -= (float)(s.image.Size.Width / 2.0);
-				s.y -= (float)(s.image.Size.Height / 2.0);
+				s.omega = (DateTime.Now.Millisecond - 500) / 100000.0F;
 				sprites.Add(s);
 				mouseDownLocation = new Point();
 				mouseLastLocation = mouseDownLocation;
@@ -156,28 +208,7 @@ namespace chasegame
 			var now = DateTime.Now;
 			var dt = now.Subtract(t0).TotalMilliseconds;
 			foreach (Sprite s in sprites) {
-				var x = s.x + s.dx * dt;
-				var y = s.y + s.dy * dt;
-				if (s.dx < 0) {
-					if (x < 0) {
-						s.dx = -s.dx;
-						x = -x;
-					}
-				} else if (x >= U.WX - s.image.Size.Width) {
-					x = (U.WX - s.image.Size.Width) * 2 - x;
-					s.dx = -s.dx;
-				}
-				if (s.dy < 0) {
-					if (y < 0) {
-						s.dy = -s.dy;
-						y = -y;
-					}
-				} else if (y >= U.WY - s.image.Size.Height) {
-					y = (U.WY - s.image.Size.Height) * 2 - y;
-					s.dy = -s.dy;
-				}
-				s.x = (float)x;
-				s.y = (float)y;
+				s.Move(dt);
 			}
 			t0 = now;
 		}
@@ -189,7 +220,7 @@ namespace chasegame
 
 			// draw all sprites we have
 			foreach (Sprite s in sprites) {
-				g.DrawImage(s.image, s.x, s.y);
+				s.Draw(g);
 			}
 
 			if (!mouseDownLocation.IsEmpty) {
@@ -204,7 +235,7 @@ namespace chasegame
 		}
 	}
 
-	/*
+
 	class TheGame : Form
 	{
 		TheGame()
@@ -222,8 +253,8 @@ namespace chasegame
 			Application.Run(new TheGame());
 		}
 	}
-	*/
 
+	/*
 	class ATest1 : Form
 	{
 		private Bitmap image;
@@ -281,4 +312,5 @@ namespace chasegame
 			Application.Run(new ATest1());
 		}
 	}
+	*/
 }
