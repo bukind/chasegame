@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 using System.ComponentModel;
@@ -6,21 +6,50 @@ using System.Collections.Generic;
 
 namespace chasegame
 {
-	class Program : Form
+	struct U
 	{
-		Program()
-		{
-			Size = new Size(U.WX, U.WY);
-			BackColor = Color.Black;
+		public const int DX = 16;
+		public const int DY = 16;
+		public const int NX = 100;
+		public const int NY = 60;
+		public const int WX = DX * NX;
+		public const int WY = DY * NY;
+		public const float minspeed = 30.0F;
+		public const float maxspeed = 120.0F;
 
-			Controls.Add(new TheInput(this));
-			CenterToScreen();
+		public static void show(string arg)
+		{
+			DateTime n = DateTime.Now;
+			Console.WriteLine(string.Format("{0:d4}-{1:d2}-{2:d2}_{3:d2}:{4:d2}:{5:d2}.{6:d3} {7}", n.Year, n.Month, n.Day, n.Hour, n.Minute, n.Second, n.Millisecond, arg));
 		}
 
-		public static void Main(string[] args)
+		public static float Hypot(float x, float y)
 		{
-			U.show("starting");
-			Application.Run(new Program());
+			return (float)Hypot((double)x, (double)y);
+		}
+		public static double Hypot(double x, double y)
+		{
+			return Math.Sqrt(x * x + y * y);
+		}
+		public static float Hypot(PointF a)
+		{
+			return Hypot(a.X, a.Y);
+		}
+
+		public static PointF Subtract(Point a, Point b)
+		{
+			return new PointF(a.X-b.X, a.Y-b.Y);
+		}
+		public static PointF SubtractScale(Point a, Point b, float scale)
+		{
+			return new PointF((a.X - b.X) * scale, (a.Y - b.Y) * scale);
+		}
+		public static PointF Scale(PointF a, float scale) {
+			return new PointF(a.X * scale, a.Y * scale);
+		}
+		public static PointF Dir(double alpha)
+		{
+			return new PointF((float)Math.Cos(alpha), (float)Math.Sin(alpha));
 		}
 	}
 
