@@ -15,6 +15,7 @@ namespace chasegame
 		private Bitmap imageCross;
 		private List<Bitmap> images;
 		private List<Sprite> sprites;
+		private Sprite prototype;
 		private int curimage;
 		private Random random;
 
@@ -37,8 +38,8 @@ namespace chasegame
 			}
 			t0 = DateTime.Now;
 			sprites = new List<Sprite>();
-			sprites.Add(new Sprite(images[0], 0.0F));
 			curimage = 0;
+			prototype = new Sprite(images[curimage], 0.0F);
 			random = new Random();
 
 			KeyUp += new KeyEventHandler(this.OnKeyUp);
@@ -65,15 +66,15 @@ namespace chasegame
 				if (curimage < 0) {
 					curimage = images.Count - 1;
 				}
-				sprites[0] = new Sprite(images[curimage], 0.0F);
+				prototype = new Sprite(images[curimage], 0.0F);
 			} else if (a.KeyCode == Keys.Right) {
 				curimage += 1;
 				if (curimage >= images.Count) {
 					curimage = 0;
 				}
-				sprites[0] = new Sprite(images[curimage], 0.0F);
+				prototype = new Sprite(images[curimage], 0.0F);
 			} else if (a.KeyCode == Keys.Back) {
-				sprites.RemoveRange(1, sprites.Count - 1);
+				sprites.Clear();
 			}
 		}
 
@@ -99,7 +100,7 @@ namespace chasegame
 			if (a.Button == MouseButtons.Left && !mouseDownLocation.IsEmpty) {
 				U.show("OnMouseUp");
 				PointF pos = new PointF(mouseDownLocation.X, mouseDownLocation.Y);
-				PointF spd = U.SubtractScale(a.Location, mouseDownLocation, 0.4F);
+				PointF spd = U.Scale(U.Subtract(a.Location, mouseDownLocation), 0.4F);
 				float speedlen = U.Hypot(spd);
 				if (speedlen > U.maxspeed) {
 					spd = U.Scale(spd,U.maxspeed/speedlen);
@@ -109,7 +110,7 @@ namespace chasegame
 					speedlen = (float)(random.NextDouble() * (U.maxspeed-U.minspeed) + U.minspeed);
 					spd = U.Scale(U.Dir(alpha), speedlen);
 				}
-				var s = new Sprite(sprites[0].image, 0.0F);
+				var s = new Sprite(images[curimage], 0.0F);
 				s.Position = pos;
 				s.Speed = spd;
 				s.Rotation = (float)(random.NextDouble() - 0.5) * 10.0F;
@@ -121,7 +122,7 @@ namespace chasegame
 				if (curimage >= images.Count) {
 					curimage = 0;
 				}
-				sprites[0] = new Sprite(images[curimage], 0.0F);
+				prototype = new Sprite(images[curimage], 0.0F);
 			}
 		}
 
@@ -147,6 +148,8 @@ namespace chasegame
 			U.show("OnPaint");
 			Graphics g = a.Graphics;
 
+			// draw a prototype
+			prototype.Draw(g);
 			// draw all sprites we have
 			foreach (Sprite s in sprites) {
 				s.Draw(g);

@@ -25,7 +25,7 @@ namespace chasegame
 		private float mass;  // the mass
 		private float scale; // scaling factor (recalculated from the mass)
 		private float radius; // current radius (recalculated from image size and scaling factor)
-		public Bitmap image;
+		private Bitmap image;
 
 		public Sprite(Bitmap theimg, float themass)
 		{

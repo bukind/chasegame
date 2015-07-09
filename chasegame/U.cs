@@ -40,10 +40,6 @@ namespace chasegame
 		{
 			return new PointF(a.X-b.X, a.Y-b.Y);
 		}
-		public static PointF SubtractScale(Point a, Point b, float scale)
-		{
-			return new PointF((a.X - b.X) * scale, (a.Y - b.Y) * scale);
-		}
 		public static PointF Scale(PointF a, float scale) {
 			return new PointF(a.X * scale, a.Y * scale);
 		}
