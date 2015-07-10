@@ -39,6 +39,7 @@
     <Compile Include="TheInput.cs" />
     <Compile Include="FreeMove.cs" />
     <Compile Include="Rib.cs" />
+    <Compile Include="Vec.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
