@@ -38,7 +38,7 @@ namespace chasegame
             }
 
             Console.WriteLine("The list is [{0}]", string.Join(", ", list));
-            list.Sort(FreeMove.SortByX);
+            list.Sort();
             Console.WriteLine("The list is [{0}]", string.Join(", ", list));
 
             Assert.That(false);

@@ -7,7 +7,7 @@ namespace chasegame
         NoWrap = 0, WrapXLow, WrapXHigh, WrapYLow, WrapYHigh
     };
 
-    public struct FreeMove
+	public struct FreeMove : IComparable< FreeMove >
     {
         public float x0;
         public float y0;
@@ -26,6 +26,10 @@ namespace chasegame
             return (a.x < b.x) ? -1 : ((a.x > b.x) ? 1 : 0);
         }
 
+		public int CompareTo( FreeMove f)
+		{
+			return (x < f.x) ? -1 : ((x > f.x) ? 1 : 0);
+		}
     }
 }
 
