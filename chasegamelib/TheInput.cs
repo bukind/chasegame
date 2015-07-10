@@ -137,9 +137,15 @@ namespace chasegame
         {
             var now = DateTime.Now;
             var dt = now.Subtract(t0).TotalMilliseconds / 1000.0;
-            foreach (Sprite s in sprites) {
-                s.Move(dt);
-            }
+			List<Rib> ribs = new List<Rib>();
+			ribs.Capacity = sprites.Count * 2;
+			foreach (Sprite s in sprites) {
+				s.MakeMove(dt, ribs);
+			}
+			Console.WriteLine("ribs = {0}/{1}", ribs.Count, ribs.Capacity);
+			foreach (Sprite s in sprites) {
+				s.Move(dt);
+			}
             t0 = now;
         }
 
