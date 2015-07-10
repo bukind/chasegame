@@ -43,6 +43,10 @@ namespace chasegame
         public static PointF Scale(PointF a, float scale) {
             return new PointF(a.X * scale, a.Y * scale);
         }
+		public static PointF Scale(PointF a, double scale) {
+			return new PointF((float)(a.X * scale), (float)(a.Y * scale));
+		}
+
         public static PointF Dir(double alpha)
         {
             return new PointF((float)Math.Cos(alpha), (float)Math.Sin(alpha));

@@ -21,11 +21,6 @@ namespace chasegame
             return string.Format("{0}/{1}",x0,x);
         }
 
-        public static int SortByX(FreeMove a, FreeMove b)
-        {
-            return (a.x < b.x) ? -1 : ((a.x > b.x) ? 1 : 0);
-        }
-
 		public int CompareTo( FreeMove f)
 		{
 			return (x < f.x) ? -1 : ((x > f.x) ? 1 : 0);

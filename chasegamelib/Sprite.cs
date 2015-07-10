@@ -16,7 +16,7 @@ namespace chasegame
 {
     public class Sprite
     {
-        private float x; // position of the image center
+		private float x; // position of the image center
         private float y;
         private float vx; // speed
         private float vy;
@@ -63,6 +63,10 @@ namespace chasegame
             set { omega = value; }
         }
 
+		public float Radius {
+			get { return radius; }
+		}
+
         public void Move(double dt)
         {
             x += (float)(vx * dt);
@@ -87,6 +91,13 @@ namespace chasegame
                 vy = -vy;
             }
         }
+
+		public void MakeMove(double dt, List<Rib> ribs)
+		{
+			Rib r = new Rib(this, dt);
+			r.Clip(ribs);
+			ribs.Add(r);
+		}
 
         public void Draw(Graphics g)
         {
