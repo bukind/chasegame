@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace chasegame
 {
-	struct U
+	public struct U
 	{
 		public const int DX = 16;
 		public const int DY = 16;

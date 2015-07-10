@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 namespace chasegame
 {
-	class Sprite
+	public class Sprite
 	{
 		private float x; // position of the image center
 		private float y;

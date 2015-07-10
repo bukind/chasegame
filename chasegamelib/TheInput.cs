@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace chasegame
 {
-	class TheInput : UserControl
+	public class TheInput : UserControl
 	{
 		private Point mouseDownLocation;
 		private Point mouseLastLocation;
