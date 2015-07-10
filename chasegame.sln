@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chasegame", "chasegame\chasegame.csproj", "{5441DE65-4175-4CB6-B5E2-63105D80980A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chasegamelib", "chasegamelib\chasegamelib.csproj", "{DA4273EB-A41D-4AE2-ABB4-401913C9322C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -13,5 +15,9 @@ Global
 		{5441DE65-4175-4CB6-B5E2-63105D80980A}.Debug|x86.Build.0 = Debug|x86
 		{5441DE65-4175-4CB6-B5E2-63105D80980A}.Release|x86.ActiveCfg = Release|x86
 		{5441DE65-4175-4CB6-B5E2-63105D80980A}.Release|x86.Build.0 = Release|x86
+		{DA4273EB-A41D-4AE2-ABB4-401913C9322C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DA4273EB-A41D-4AE2-ABB4-401913C9322C}.Debug|x86.Build.0 = Debug|Any CPU
+		{DA4273EB-A41D-4AE2-ABB4-401913C9322C}.Release|x86.ActiveCfg = Release|Any CPU
+		{DA4273EB-A41D-4AE2-ABB4-401913C9322C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

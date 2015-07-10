@@ -37,10 +37,6 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="U.cs" />
-    <Compile Include="Sprite.cs" />
-    <Compile Include="TheInput.cs" />
-    <Compile Include="FreeMove.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -54,4 +50,10 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
+  <ItemGroup>
+    <ProjectReference Include="..\chasegamelib\chasegamelib.csproj">
+      <Project>{DA4273EB-A41D-4AE2-ABB4-401913C9322C}</Project>
+      <Name>chasegamelib</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>
