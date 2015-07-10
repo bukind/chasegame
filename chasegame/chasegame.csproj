@@ -40,6 +40,7 @@
     <Compile Include="U.cs" />
     <Compile Include="Sprite.cs" />
     <Compile Include="TheInput.cs" />
+    <Compile Include="FreeMove.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
