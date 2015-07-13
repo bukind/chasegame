@@ -37,9 +37,6 @@
     <Compile Include="Test1.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
       <Properties>
@@ -60,5 +57,8 @@
       <Project>{DA4273EB-A41D-4AE2-ABB4-401913C9322C}</Project>
       <Name>chasegamelib</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

@@ -5,6 +5,7 @@ using chasegame;
 
 namespace chasegame
 {
+	/*
     [TestFixture()]
     public class Test1
     {
@@ -43,13 +44,7 @@ namespace chasegame
 
             Assert.That(false);
         }
-        /*
-        public static void Main(string[] args)
-        {
-            var t = new Test1();
-            t.TestSort();
-        }
-        */
     }
+    */
 }
 
