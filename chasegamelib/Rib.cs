@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 namespace chasegame
 {
-	public struct Rib : IComparable< Rib >
+	public struct Rib
 	{
-		public PointF speed;
-		public PointF pos0;
-		public PointF pos1;
-		public float  time0; // relative time
-		public float  time1;
+		public Vec speed;
+		public Vec pos0;
+		public Vec pos1;
+		public double time0; // relative time
+		public double time1;
 		public Sprite sprite;
 
 		public Rib(Sprite spr, double dt)
@@ -18,16 +18,16 @@ namespace chasegame
 			sprite = spr;
 			speed = sprite.Speed;
 			pos0 = sprite.Position;
-			pos1 = pos0 + new SizeF(U.Scale(speed, dt));
-			time0 = 0.0f;
-			time1 = (float)dt;
+			pos1 = pos0.Add(speed.Scale(dt));
+			time0 = 0.0;
+			time1 = dt;
 		}
 
 		public void Clip(List<Rib> ribs)
 		{
 			var radius = sprite.Radius;
 			bool hit = false;
-			float poshit = 0.0F;
+			double poshit = 0.0;
 			if (speed.X < 0) {
 				if (pos1.X < radius) {
 					hit = true;
@@ -39,11 +39,11 @@ namespace chasegame
 			}
 			if (hit) {
 				// clipped by X
-				float thit = (poshit - pos0.X) / speed.X;
+				double thit = (poshit - pos0.X) / speed.X;
 				Rib next = new Rib();
 				next.speed = speed;
 				next.speed.X = -next.speed.X;
-				next.pos0 = pos0 + new SizeF(U.Scale(speed, thit));
+				next.pos0 = pos0.Add(speed.Scale(thit));
 				next.pos1 = pos1;
 				next.pos1.X = 2 * poshit - pos1.X;
 				next.time0 = time0 + thit;
@@ -67,11 +67,11 @@ namespace chasegame
 				poshit = U.WY - radius;
 			}
 			if (hit) {
-				float thit = (poshit - pos0.Y) / speed.Y;
+				double thit = (poshit - pos0.Y) / speed.Y;
 				Rib next = new Rib();
 				next.speed = speed;
 				next.speed.Y = -next.speed.Y;
-				next.pos0 = pos0 + new SizeF(U.Scale(speed, thit));
+				next.pos0 = pos0.Add(speed.Scale(thit));
 				next.pos1 = pos1;
 				next.pos1.Y = 2 * poshit - pos1.Y;
 				next.time0 = time0 + thit;
@@ -86,7 +86,7 @@ namespace chasegame
 			}
 		}
 
-		public int CompareTo( Rib r)
+		public int CompareTo(Rib r)
 		{
 			return pos0.X < r.pos0.X ? -1 : (pos0.X > r.pos0.X ? 1 : 0);
 		}

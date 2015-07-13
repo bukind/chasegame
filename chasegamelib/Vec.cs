@@ -3,27 +3,54 @@ using System.Drawing;
 
 namespace chasegame
 {
+	public struct Rot
+	{
+		private Vec rot;
+
+		public Rot(double alpha) {
+			rot = new Vec(Math.Cos(alpha), Math.Sin(alpha));
+		}
+
+		public Vec Rotate(Vec a) {
+			return Rotate(a.X, a.Y);
+		}
+
+		public Vec Rotate(double x, double y) {
+			return new Vec(x * rot.X + y * rot.Y, -x * rot.Y + y * rot.X);
+		}
+	}
+
 	public struct Vec
 	{
 		public double X;
 		public double Y;
+	
+		public Vec() {
+			X = Y = 0.0;
+		}
 
-		public Vec(Point p)
-		{
+		public Vec(Point p) {
 			X = p.X;
 			Y = p.Y;
 		}
 
-		public Vec(PointF p)
-		{
+		public Vec(Size p) {
+			X = p.Width;
+			Y = p.Height;
+		}
+
+		public Vec(PointF p) {
 			X = p.X;
 			Y = p.Y;
 		}
 
-		public Vec(double x, double y)
-		{
+		public Vec(double x, double y) {
 			X = x;
 			Y = y;
+		}
+
+		public static Vec Dir(double alpha) {
+			return new Vec(Math.Cos(alpha),Math.Sin(alpha));
 		}
 
 		public PointF Point {

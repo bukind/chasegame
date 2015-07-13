@@ -99,20 +99,19 @@ namespace chasegame
         {
             if (a.Button == MouseButtons.Left && !mouseDownLocation.IsEmpty) {
                 U.show("OnMouseUp");
-                PointF pos = new PointF(mouseDownLocation.X, mouseDownLocation.Y);
-                PointF spd = U.Scale(U.Subtract(a.Location, mouseDownLocation), 0.4F);
-                float speedlen = U.Hypot(spd);
+				var s = new Sprite(images[curimage], 0.0F);
+				s.Position = new Vec(mouseDownLocation);
+				Vec spd = new Vec(a.Location).Subtract(s.Position).Scale(0.4);
+				var speedlen = spd.Length;
                 if (speedlen > U.maxspeed) {
-                    spd = U.Scale(spd,U.maxspeed/speedlen);
+                    spd = spd.Scale(U.maxspeed/speedlen);
                 } else if (speedlen < U.minspeed) {
                     // make random speed
                     double alpha = Math.PI * 2.0 * random.NextDouble();
-                    speedlen = (float)(random.NextDouble() * (U.maxspeed-U.minspeed) + U.minspeed);
-                    spd = U.Scale(U.Dir(alpha), speedlen);
+                    speedlen = (random.NextDouble() * (U.maxspeed-U.minspeed) + U.minspeed);
+					spd = Vec.Dir(alpha).Scale(speedlen);
                 }
-                var s = new Sprite(images[curimage], 0.0F);
-                s.Position = pos;
-                s.Speed = spd;
+				s.Speed = spd;
                 s.Rotation = (float)(random.NextDouble() - 0.5) * 10.0F;
                 sprites.Add(s);
                 mouseDownLocation = new Point();
@@ -143,11 +142,40 @@ namespace chasegame
 				s.MakeMove(dt, ribs);
 			}
 			Console.WriteLine("ribs = {0}/{1}", ribs.Count, ribs.Capacity);
-			foreach (Sprite s in sprites) {
-				s.Move(dt);
+			// FIXME: process all rib collisions here
+			// finally sort ribs by sprite, then by time and apply back to sprites
+			ribs.RemoveAll(matchRibWithoutImage);
+			ribs.Sort(compareRibsBySpriteAndTime);
+			sprites.Clear();
+			if (ribs.Count > 0) {
+				Rib lastrib = ribs[0];
+				for (int i = 1; i < ribs.Count; ++i) {
+					Rib nextrib = ribs[i];
+					if (lastrib.sprite.Id != nextrib.sprite.Id) {
+						// different sprites
+						lastrib.sprite.Update(lastrib);
+						sprites.Add(lastrib.sprite);
+					}
+					lastrib = nextrib;
+				}
+				lastrib.sprite.Update(lastrib);
+				sprites.Add(lastrib.sprite);
 			}
             t0 = now;
         }
+
+		private static int compareRibsBySpriteAndTime(Rib a, Rib b)
+		{
+			if (object.Equals(a.sprite, b.sprite)) {
+				return a.time1.CompareTo(b.time1);
+			}
+			return a.sprite.Id.CompareTo(b.sprite.Id);
+		}
+
+		private static bool matchRibWithoutImage(Rib a)
+		{
+			return !a.sprite.IsValid();
+		}
 
         private void OnPaint(object sender, PaintEventArgs a)
         {

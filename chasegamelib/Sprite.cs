@@ -16,57 +16,66 @@ namespace chasegame
 {
     public class Sprite
     {
-		private float x; // position of the image center
-        private float y;
-        private float vx; // speed
-        private float vy;
-        private float alpha; // current angle (radians)
-        private float omega; // rotation speed
-        private float mass;  // the mass
-        private float scale; // scaling factor (recalculated from the mass)
-        private float radius; // current radius (recalculated from image size and scaling factor)
-        private Bitmap image;
+		public Vec Position;
+		public Vec Speed;
+        private double alpha; // current angle (radians)
+        private double omega; // rotation speed
+		private double radius;
+        private double mass;  // the mass
+        private double scale; // scaling factor (recalculated from the mass)
+        public Bitmap image;
+		private int identity;
 
-        public Sprite(Bitmap theimg, float themass)
+		private static int globid = 0;
+		private static int getIdentity() {
+			return ++globid;
+		}
+
+		public Sprite()
+		{
+			identity = getIdentity();
+		}
+
+        public Sprite(Bitmap theimg, double themass)
         {
+			identity = getIdentity();
             image = theimg;
-            vx = vy = alpha = omega = 0.0F;
+			Speed = new Vec();
+            alpha = omega = 0.0;
             // init is the initial radius
-            float init = Math.Min(image.Size.Width, image.Size.Height) * 0.5F;
-            if (themass <= 0.001F) {
+            var init = Math.Min(image.Size.Width, image.Size.Height) * 0.5;
+            if (themass <= 0.001) {
                 themass = init * init;
             }
             mass = themass;
-            scale = (float)(Math.Sqrt(mass) / init) * 0.5F;
+            scale = (Math.Sqrt(mass) / init) * 0.5;
             radius = init * 2 * scale;
-            x = image.Size.Width * scale;
-            y = image.Size.Height * scale;
+			Position = new Vec(image.Size).Scale(scale);
         }
 
-        public PointF Position {
-            get { return new PointF(x, y); }
-            set {
-                x = value.X;
-                y = value.Y;
-            }
-        }
+		public bool IsValid() {
+			return image != null;
+		}
 
-        public PointF Speed {
-            get { return new PointF(vx, vy); }
-            set {
-                vx = value.X;
-                vy = value.Y;
-            }
-        }
-        public float Rotation {
+        public double Rotation {
             get { return omega; }
             set { omega = value; }
         }
 
-		public float Radius {
+		public double Radius {
 			get { return radius; }
 		}
 
+		public int Id {
+			get { return identity; }
+		}
+
+		public void Update(Rib rib) {
+			Console.WriteLine("FIXME: not impl");
+			Environment.Exit(1);
+		}
+
+		/*
         public void Move(double dt)
         {
             x += (float)(vx * dt);
@@ -91,6 +100,7 @@ namespace chasegame
                 vy = -vy;
             }
         }
+        */
 
 		public void MakeMove(double dt, List<Rib> ribs)
 		{
@@ -102,14 +112,12 @@ namespace chasegame
         public void Draw(Graphics g)
         {
             PointF[] dest = new PointF[3];
-            float cosa = (float)Math.Cos(alpha);
-            float sina = (float)Math.Sin(alpha);
-            var wx = image.Size.Width * scale;
-            var wy = image.Size.Height * scale;
+			Rot rotation = new Rot(alpha);
+			Vec sz = new Vec(image.Size).Scale(scale);
             // x + px*cosa+py*sina, y - px*sina + py*cosa 
-            dest[0] = new PointF(x - wx * cosa - wy * sina, y + wx * sina - wy * cosa);
-            dest[1] = new PointF(x + wx * cosa - wy * sina, y - wx * sina - wy * cosa);
-            dest[2] = new PointF(x - wx * cosa + wy * sina, y + wx * sina + wy * cosa);
+			dest[0] = Position.Add(rotation.Rotate(-sz.X, -sz.Y)).Point;
+			dest[1] = Position.Add(rotation.Rotate(sz.X, -sz.Y)).Point;
+			dest[2] = Position.Add(rotation.Rotate(-sz.X, sz.Y)).Point;
             g.DrawImage(image, dest);
         }
     }
