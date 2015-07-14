@@ -37,7 +37,6 @@
     <Compile Include="U.cs" />
     <Compile Include="Sprite.cs" />
     <Compile Include="TheInput.cs" />
-    <Compile Include="FreeMove.cs" />
     <Compile Include="Rib.cs" />
     <Compile Include="Vec.cs" />
     <Compile Include="Collision.cs" />
