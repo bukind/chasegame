@@ -154,9 +154,9 @@ namespace chasegame
 			*/
 			sprites.Clear();
 			foreach (Rib rib in ribs) {
-				rib.sprite.Update(rib);
-				if (sprites.Count == 0 || sprites[sprites.Count - 1].Id != rib.sprite.Id) {
-					sprites.Add(rib.sprite);
+				rib.Sprite.Update(rib);
+				if (sprites.Count == 0 || sprites[sprites.Count - 1].Id != rib.Sprite.Id) {
+					sprites.Add(rib.Sprite);
 				}
 			}
             t0 = now;
@@ -164,31 +164,38 @@ namespace chasegame
 
 		private static void checkCollisions(List<Rib> ribs)
 		{
-			List<RibRect> rects = new List<RibRect>();
-			rects.Capacity = ribs.Count + ribs.Count / 2;
-			rects.Sort(compareRibRectsByX);
-			Dictionary<Rib,Collision> coldict = new Dictionary<Rib,Collision>();
-			for (int i = 0; i < rects.Count; ++i) {
-				rects[i].FindCollision(rects, coldict);
-			}
+			List<Collision> list = new List<Collision>();
+			list.Capacity = ribs.Count + 20;
+			List<Rib> checklist = new List<Rib>(ribs);
+			do {
+				List<Rib> newribs = new List<Rib>();
+				foreach (Rib rib in checklist) {
+					// FIXME
+				}
+				checklist = newribs;
+			} while (checklist.Count > 0);
 		}
 
 		private static int compareRibRectsByX(RibRect a, RibRect b) {
 			return a.min.X.CompareTo(b.min.X);
 		}
 
+		/*
 		private static int compareRibsBySpriteAndTime(Rib a, Rib b)
 		{
-			if (object.Equals(a.sprite, b.sprite)) {
+			if (object.Equals(a.Sprite, b.Sprite)) {
 				return a.time0.CompareTo(b.time0);
 			}
 			return a.sprite.Id.CompareTo(b.sprite.Id);
 		}
+		*/
 
+		/*
 		private static bool matchRibWithoutImage(Rib a)
 		{
-			return !a.sprite.IsValid();
+			return !a.Sprite.IsValid();
 		}
+		 */
 
         private void OnPaint(object sender, PaintEventArgs a)
         {

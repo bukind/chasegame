@@ -4,16 +4,15 @@ using System.Collections.Generic;
 
 namespace chasegame
 {
-	public class RibRect
+	public struct RibRect
 	{
 		public Vec min;
 		public Vec max;
-		public Rib rib;
 
 		public RibRect(Rib r) {
-			min = r.pos0;
-			max = r.pos1;
-			rib = r;
+			var radius = r.Sprite.Radius;
+			min = r.StartPos;
+			max = r.EndPos;
 			if (max.X < min.X) {
 				var t = max.X;
 				max.X = min.X;
@@ -24,13 +23,13 @@ namespace chasegame
 				max.Y = min.Y;
 				min.Y = t;
 			}
-			var radius = r.sprite.Radius;
 			min.X -= radius;
 			min.Y -= radius;
 			max.X += radius;
 			max.Y += radius;
 		}
 
+		/*
 		public void FindCollision(List<RibRect> rects, Dictionary<Rib,Collision> coldict)
 		{
 			if (rib == null || rib.sprite == null) {
@@ -67,5 +66,6 @@ namespace chasegame
 			// FIXME
 			return -1;
 		}
+		*/
 	}
 }

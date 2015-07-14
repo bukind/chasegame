@@ -71,9 +71,9 @@ namespace chasegame
 		}
 
 		public void Update(Rib rib) {
-			Position = rib.pos1;
-			Speed = rib.speed;
-			alpha += omega * (rib.time1 - rib.time0);
+			Position = rib.EndPos;
+			Speed = rib.Speed;
+			alpha += omega * rib.DeltaTime;
 		}
 
 		/*

@@ -55,6 +55,23 @@ namespace chasegame
 			Assert.That(!s.IsValid());
 			Assert.That(s.Id == 2);
 		}
+
+		private class Temp
+		{
+			public Temp() {}
+		}
+
+		[Test()]
+		public void TestSortNull()
+		{
+			var list = new List<Temp>();
+			list.Add(new Temp());
+			list.Add(new Temp());
+			list.Add(new Temp());
+			Console.WriteLine(string.Join(",", list));
+			list[1] = null;
+			Console.WriteLine("item is ", list[1]);
+		}
     }
 }
 

@@ -6,12 +6,18 @@ namespace chasegame
 {
 	public class Rib
 	{
-		public Vec speed;
-		public Vec pos0;
-		public Vec pos1;
-		public double time0; // relative time
-		public double time1;
-		public Sprite sprite;
+		private Vec speed;
+		private Vec pos0;
+		private Vec pos1;
+		private double time0; // relative time
+		private double time1;
+		private Sprite sprite;
+
+		public Vec StartPos { get { return pos0; } }
+		public Vec EndPos { get { return pos1; } }
+		public Vec Speed { get { return speed; } }
+		public double DeltaTime { get { return time1 - time0; } }
+		public Sprite Sprite { get { return sprite; } }
 
 		public Rib(Sprite spr, double deltat)
 		{
@@ -33,13 +39,9 @@ namespace chasegame
 			sprite = other.sprite;
 		}
 
-		public RibRect Rect {
-			get { return new RibRect(this); }
-		}
-
-		private void SetSpeed(Vec spd) {
+		private void setSpeed(Vec spd) {
 			speed = spd;
-			pos1 = pos0.Add(speed.Scale(time1 - time0));
+			pos1 = pos0.Add(speed.Scale(DeltaTime));
 		}
 
 		public void Clip(List<Rib> ribs)
@@ -60,7 +62,7 @@ namespace chasegame
 				// clipped by X
 				double thit = (poshit - pos0.X) / speed.X;
 				Rib next = Split(thit);
-				next.SetSpeed(new Vec(-speed.X,speed.Y));
+				next.setSpeed(new Vec(-speed.X,speed.Y));
 				next.Clip(ribs);
 				ribs.Add(next);
 				hit = false;
@@ -78,7 +80,7 @@ namespace chasegame
 			if (hit) {
 				double thit = (poshit - pos0.Y) / speed.Y;
 				Rib next = Split(thit);
-				next.SetSpeed(new Vec(speed.X, -speed.Y));
+				next.setSpeed(new Vec(speed.X, -speed.Y));
 				next.Clip(ribs);
 				ribs.Add(next);
 				hit = false;
@@ -101,6 +103,9 @@ namespace chasegame
 		{
 			return pos0.X < r.pos0.X ? -1 : (pos0.X > r.pos0.X ? 1 : 0);
 		}
+
+		public static int CompareByTime(Rib a, Rib b) {
+			return a.time0.CompareTo(b.time0);
+		}
 	}
 }
-
