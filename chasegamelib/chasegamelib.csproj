@@ -40,6 +40,8 @@
     <Compile Include="FreeMove.cs" />
     <Compile Include="Rib.cs" />
     <Compile Include="Vec.cs" />
+    <Compile Include="Collision.cs" />
+    <Compile Include="RibRect.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

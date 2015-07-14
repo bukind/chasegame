@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace chasegame
 {
-	public struct Rib
+	public class Rib
 	{
 		public Vec speed;
 		public Vec pos0;
@@ -21,6 +21,20 @@ namespace chasegame
 			pos1 = pos0.Add(speed.Scale(deltat));
 			time0 = 0.0;
 			time1 = deltat;
+		}
+
+		public Rib(Rib other)
+		{
+			speed = other.speed;
+			pos0 = other.pos0;
+			pos1 = other.pos1;
+			time0 = other.time0;
+			time1 = other.time1;
+			sprite = other.sprite;
+		}
+
+		public RibRect Rect {
+			get { return new RibRect(this); }
 		}
 
 		private void SetSpeed(Vec spd) {
@@ -73,7 +87,7 @@ namespace chasegame
 
 		public Rib Split(double deltat)
 		{
-			Rib next = this;
+			Rib next = new Rib(this);
 			next.pos0 = pos0.Add(speed.Scale(deltat));
 			next.pos1 = pos1;
 			pos1 = next.pos0;

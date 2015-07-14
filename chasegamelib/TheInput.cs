@@ -142,10 +142,16 @@ namespace chasegame
 				s.MakeMove(dt, ribs);
 			}
 			Console.WriteLine("ribs = {0}/{1}", ribs.Count, ribs.Capacity);
+			checkCollisions(ribs);
+			/*
+			ribs.Sort(compareRibsByX);
 			// FIXME: process all rib collisions here
 			// finally sort ribs by sprite, then by time and apply back to sprites
 			ribs.RemoveAll(matchRibWithoutImage);
 			ribs.Sort(compareRibsBySpriteAndTime);
+			foreach (Rib rib in ribs) {
+			}
+			*/
 			sprites.Clear();
 			foreach (Rib rib in ribs) {
 				rib.sprite.Update(rib);
@@ -155,6 +161,21 @@ namespace chasegame
 			}
             t0 = now;
         }
+
+		private static void checkCollisions(List<Rib> ribs)
+		{
+			List<RibRect> rects = new List<RibRect>();
+			rects.Capacity = ribs.Count + ribs.Count / 2;
+			rects.Sort(compareRibRectsByX);
+			Dictionary<Rib,Collision> coldict = new Dictionary<Rib,Collision>();
+			for (int i = 0; i < rects.Count; ++i) {
+				rects[i].FindCollision(rects, coldict);
+			}
+		}
+
+		private static int compareRibRectsByX(RibRect a, RibRect b) {
+			return a.min.X.CompareTo(b.min.X);
+		}
 
 		private static int compareRibsBySpriteAndTime(Rib a, Rib b)
 		{
