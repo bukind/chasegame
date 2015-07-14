@@ -152,28 +152,24 @@ namespace chasegame
 			foreach (Rib rib in ribs) {
 			}
 			*/
-			sprites.Clear();
+			Dictionary<Sprite,Sprite> dict = new Dictionary<Sprite,Sprite>();
 			foreach (Rib rib in ribs) {
+				if (rib == null || rib.Sprite == null) {
+					continue;
+				}
 				rib.Sprite.Update(rib);
-				if (sprites.Count == 0 || sprites[sprites.Count - 1].Id != rib.Sprite.Id) {
-					sprites.Add(rib.Sprite);
+				if (!dict.ContainsKey(rib.Sprite)) {
+					dict.Add(rib.Sprite, rib.Sprite);
 				}
 			}
+			sprites = new List<Sprite>(dict.Keys);
             t0 = now;
         }
 
 		private static void checkCollisions(List<Rib> ribs)
 		{
-			List<Collision> list = new List<Collision>();
-			list.Capacity = ribs.Count + 20;
-			List<Rib> checklist = new List<Rib>(ribs);
-			do {
-				List<Rib> newribs = new List<Rib>();
-				foreach (Rib rib in checklist) {
-					// FIXME
-				}
-				checklist = newribs;
-			} while (checklist.Count > 0);
+			Collider cld = new Collider(ribs);
+			cld.Run();
 		}
 
 		private static int compareRibRectsByX(RibRect a, RibRect b) {

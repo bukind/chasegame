@@ -29,6 +29,12 @@ namespace chasegame
 			max.Y += radius;
 		}
 
+		public bool Overlaps(RibRect rect)
+		{
+			return (min.X <= rect.max.X) && (rect.min.X <= max.X) &&
+				(min.Y <= rect.max.Y) && (rect.min.Y <= max.Y);
+		}
+
 		/*
 		public void FindCollision(List<RibRect> rects, Dictionary<Rib,Collision> coldict)
 		{

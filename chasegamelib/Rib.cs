@@ -12,12 +12,16 @@ namespace chasegame
 		private double time0; // relative time
 		private double time1;
 		private Sprite sprite;
+		private Collision collision;
 
 		public Vec StartPos { get { return pos0; } }
 		public Vec EndPos { get { return pos1; } }
 		public Vec Speed { get { return speed; } }
 		public double DeltaTime { get { return time1 - time0; } }
+		public double StartTime { get { return time0; } }
+		public double EndTime { get { return time1; } }
 		public Sprite Sprite { get { return sprite; } }
+		public Collision Collision { get { return collision == null ? new Collision(this) : collision; } }
 
 		public Rib(Sprite spr, double deltat)
 		{
@@ -27,6 +31,7 @@ namespace chasegame
 			pos1 = pos0.Add(speed.Scale(deltat));
 			time0 = 0.0;
 			time1 = deltat;
+			collision = null;
 		}
 
 		public Rib(Rib other)
@@ -106,6 +111,36 @@ namespace chasegame
 
 		public static int CompareByTime(Rib a, Rib b) {
 			return a.time0.CompareTo(b.time0);
+		}
+
+		public bool CollidesWith(Rib rib, out double hittime)
+		{
+			// we are working in the reference frame of this.pos0, moving with the speed this.speed
+			Vec ribpos = rib.pos0.Subtract(pos0);
+			Vec ribspd = rib.speed.Subtract(speed);
+			double time = time0;
+			if (time0 < rib.time0) {
+				// correct the position
+				time = rib.time0;
+				ribpos = ribpos.Subtract(speed.Scale(time - time0));
+			} else if (time0 > rib.time0) {
+				ribpos = ribpos.Add(rib.speed.Scale(time - rib.time0));
+			}
+			var spd2 = ribspd.Length2;
+			if (spd2 <= 0.00001) {
+				hittime = 0;
+				return false;
+			}
+			// Let's only find the closest position
+			// Xclose = X - (X*V)*V / (V*V)
+			// Tclose = -(X*V) / (V*V)
+			hittime = -ribpos.Scalar(ribspd) / spd2;
+			if (hittime < time ||
+				hittime > time1 ||
+				hittime > rib.time1) {
+				return false;
+			}
+			return true;
 		}
 	}
 }

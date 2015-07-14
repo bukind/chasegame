@@ -41,6 +41,7 @@
     <Compile Include="Vec.cs" />
     <Compile Include="Collision.cs" />
     <Compile Include="RibRect.cs" />
+    <Compile Include="Collider.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

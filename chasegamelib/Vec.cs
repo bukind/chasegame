@@ -61,6 +61,10 @@ namespace chasegame
 			get { return Math.Sqrt(X * X + Y * Y); }
 		}
 
+		public double Length2 {
+			get { return X * X + Y * Y; }
+		}
+
 		public Vec Add(Vec x) {
 			var tmp = this;
 			tmp.X += x.X;
@@ -80,6 +84,10 @@ namespace chasegame
 			tmp.X *= x;
 			tmp.Y *= x;
 			return tmp;
+		}
+
+		public double Scalar(Vec v) {
+			return X * v.X + Y * v.Y;
 		}
 
 		public override string ToString() {
