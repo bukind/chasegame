@@ -16,6 +16,7 @@ namespace chasegame
 			times = new Dictionary<Rib, double>();
 		}
 
+		// return the collision rib with the minimum time or null
 		public void Fill(List<Rib> ribs)
 		{
 			foreach (Rib rib in ribs) {
@@ -41,6 +42,22 @@ namespace chasegame
 			if (times.Count > 0) {
 				U.show(string.Format("rib has {0} collisions", times.Count));
 			}
+		}
+
+		public bool GetFirstHit(out Rib rib, out double time)
+		{
+			rib = null;
+			time = 0.0;
+			if (times.Count == 0) {
+				return false;
+			}
+			foreach (KeyValuePair<Rib,double> kv in times) {
+				if (rib == null || kv.Value < time) {
+					rib = kv.Key;
+					time = kv.Value;
+				}
+			}
+			return true;
 		}
 	}
 }
