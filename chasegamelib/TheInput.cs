@@ -147,19 +147,11 @@ namespace chasegame
 			ribs.RemoveAll(matchRibWithoutImage);
 			ribs.Sort(compareRibsBySpriteAndTime);
 			sprites.Clear();
-			if (ribs.Count > 0) {
-				Rib lastrib = ribs[0];
-				for (int i = 1; i < ribs.Count; ++i) {
-					Rib nextrib = ribs[i];
-					if (lastrib.sprite.Id != nextrib.sprite.Id) {
-						// different sprites
-						lastrib.sprite.Update(lastrib);
-						sprites.Add(lastrib.sprite);
-					}
-					lastrib = nextrib;
+			foreach (Rib rib in ribs) {
+				rib.sprite.Update(rib);
+				if (sprites.Count == 0 || sprites[sprites.Count - 1].Id != rib.sprite.Id) {
+					sprites.Add(rib.sprite);
 				}
-				lastrib.sprite.Update(lastrib);
-				sprites.Add(lastrib.sprite);
 			}
             t0 = now;
         }
@@ -167,7 +159,7 @@ namespace chasegame
 		private static int compareRibsBySpriteAndTime(Rib a, Rib b)
 		{
 			if (object.Equals(a.sprite, b.sprite)) {
-				return a.time1.CompareTo(b.time1);
+				return a.time0.CompareTo(b.time0);
 			}
 			return a.sprite.Id.CompareTo(b.sprite.Id);
 		}

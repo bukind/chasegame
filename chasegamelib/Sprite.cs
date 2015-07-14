@@ -71,8 +71,9 @@ namespace chasegame
 		}
 
 		public void Update(Rib rib) {
-			Console.WriteLine("FIXME: not impl");
-			Environment.Exit(1);
+			Position = rib.pos1;
+			Speed = rib.speed;
+			alpha += omega * (rib.time1 - rib.time0);
 		}
 
 		/*

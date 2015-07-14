@@ -13,14 +13,19 @@ namespace chasegame
 		public double time1;
 		public Sprite sprite;
 
-		public Rib(Sprite spr, double dt)
+		public Rib(Sprite spr, double deltat)
 		{
 			sprite = spr;
 			speed = sprite.Speed;
 			pos0 = sprite.Position;
-			pos1 = pos0.Add(speed.Scale(dt));
+			pos1 = pos0.Add(speed.Scale(deltat));
 			time0 = 0.0;
-			time1 = dt;
+			time1 = deltat;
+		}
+
+		private void SetSpeed(Vec spd) {
+			speed = spd;
+			pos1 = pos0.Add(speed.Scale(time1 - time0));
 		}
 
 		public void Clip(List<Rib> ribs)
@@ -40,18 +45,8 @@ namespace chasegame
 			if (hit) {
 				// clipped by X
 				double thit = (poshit - pos0.X) / speed.X;
-				Rib next = new Rib();
-				next.speed = speed;
-				next.speed.X = -next.speed.X;
-				next.pos0 = pos0.Add(speed.Scale(thit));
-				next.pos1 = pos1;
-				next.pos1.X = 2 * poshit - pos1.X;
-				next.time0 = time0 + thit;
-				next.time1 = time1;
-				next.sprite = sprite;
-				// clip self
-				pos1 = next.pos0;
-				time1 = next.time0;
+				Rib next = Split(thit);
+				next.SetSpeed(new Vec(-speed.X,speed.Y));
 				next.Clip(ribs);
 				ribs.Add(next);
 				hit = false;
@@ -68,22 +63,24 @@ namespace chasegame
 			}
 			if (hit) {
 				double thit = (poshit - pos0.Y) / speed.Y;
-				Rib next = new Rib();
-				next.speed = speed;
-				next.speed.Y = -next.speed.Y;
-				next.pos0 = pos0.Add(speed.Scale(thit));
-				next.pos1 = pos1;
-				next.pos1.Y = 2 * poshit - pos1.Y;
-				next.time0 = time0 + thit;
-				next.time1 = time1;
-				next.sprite = sprite;
-				// clip self
-				pos1 = next.pos0;
-				time1 = next.time0;
+				Rib next = Split(thit);
+				next.SetSpeed(new Vec(speed.X, -speed.Y));
 				next.Clip(ribs);
 				ribs.Add(next);
 				hit = false;
 			}
+		}
+
+		public Rib Split(double deltat)
+		{
+			Rib next = this;
+			next.pos0 = pos0.Add(speed.Scale(deltat));
+			next.pos1 = pos1;
+			pos1 = next.pos0;
+			next.time0 = time0 + deltat;
+			next.time1 = time1;
+			time1 = next.time0;
+			return next;
 		}
 
 		public int CompareTo(Rib r)
