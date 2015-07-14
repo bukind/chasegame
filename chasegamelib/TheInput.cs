@@ -152,6 +152,8 @@ namespace chasegame
 			foreach (Rib rib in ribs) {
 			}
 			*/
+			ribs.RemoveAll(matchRibNull);
+			ribs.Sort(compareRibsByEndTime);
 			Dictionary<Sprite,Sprite> dict = new Dictionary<Sprite,Sprite>();
 			foreach (Rib rib in ribs) {
 				if (rib == null || rib.Sprite == null) {
@@ -172,19 +174,20 @@ namespace chasegame
 			cld.Run();
 		}
 
-		private static int compareRibRectsByX(RibRect a, RibRect b) {
-			return a.min.X.CompareTo(b.min.X);
+		private static bool matchRibNull(Rib rib) {
+			return rib == null || rib.Sprite == null;
 		}
 
 		/*
-		private static int compareRibsBySpriteAndTime(Rib a, Rib b)
-		{
-			if (object.Equals(a.Sprite, b.Sprite)) {
-				return a.time0.CompareTo(b.time0);
-			}
-			return a.sprite.Id.CompareTo(b.sprite.Id);
+		private static int compareRibRectsByX(RibRect a, RibRect b) {
+			return a.min.X.CompareTo(b.min.X);
 		}
 		*/
+
+		private static int compareRibsByEndTime(Rib a, Rib b)
+		{
+			return a.EndTime.CompareTo(b.EndTime);
+		}
 
 		/*
 		private static bool matchRibWithoutImage(Rib a)
