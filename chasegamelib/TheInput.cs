@@ -139,10 +139,10 @@ namespace chasegame
 			List<Rib> ribs = new List<Rib>();
 			ribs.Capacity = sprites.Count * 2;
 			foreach (Sprite s in sprites) {
-				s.MakeMove(dt, ribs);
+				s.MakeMove(0.0, dt, ribs);
 			}
 			Console.WriteLine("ribs = {0}/{1}", ribs.Count, ribs.Capacity);
-			checkCollisions(ribs);
+			checkCollisions(ribs, dt);
 			/*
 			ribs.Sort(compareRibsByX);
 			// FIXME: process all rib collisions here
@@ -166,10 +166,10 @@ namespace chasegame
             t0 = now;
         }
 
-		private static void checkCollisions(List<Rib> ribs)
+		private static void checkCollisions(List<Rib> ribs, double dt)
 		{
 			Collider cld = new Collider(ribs);
-			cld.Run();
+			cld.Run(dt);
 		}
 
 		/*

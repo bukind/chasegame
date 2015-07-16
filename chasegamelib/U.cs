@@ -23,6 +23,11 @@ namespace chasegame
             Console.WriteLine(string.Format("{0:d4}-{1:d2}-{2:d2}_{3:d2}:{4:d2}:{5:d2}.{6:d3} {7}", n.Year, n.Month, n.Day, n.Hour, n.Minute, n.Second, n.Millisecond, arg));
         }
 
+		public static void show(string fmt, params object[] objs)
+		{
+			show(string.Format(fmt, objs));
+		}
+
         public static float Hypot(float x, float y)
         {
             return (float)Hypot((double)x, (double)y);

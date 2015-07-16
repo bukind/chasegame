@@ -21,17 +21,23 @@ namespace chasegame
 		public double StartTime { get { return time0; } }
 		public double EndTime { get { return time1; } }
 		public Sprite Sprite { get { return sprite; } }
-		public Collision Collision { get { return collision == null ? new Collision(this) : collision; } }
+		public Collision Collision {
+			get {
+				if (collision == null) {
+					collision = new Collision(this);
+				}
+				return collision;
+			}
+		}
 
-		public Rib(Sprite spr, double deltat)
+		public Rib(Sprite spr, double endtime, double starttime = 0.0)
 		{
 			sprite = spr;
 			speed = sprite.Speed;
 			pos0 = sprite.Position;
-			pos1 = pos0.Add(speed.Scale(deltat));
-			time0 = 0.0;
-			time1 = deltat;
-			collision = null;
+			time0 = starttime;
+			time1 = endtime;
+			setSpeed(sprite.Speed);
 		}
 
 		public Rib(Rib other)
@@ -47,6 +53,14 @@ namespace chasegame
 		private void setSpeed(Vec spd) {
 			speed = spd;
 			pos1 = pos0.Add(speed.Scale(DeltaTime));
+			collision = null;
+		}
+
+		public void SetEndTime(double t)
+		{
+			time1 = t;
+			pos1 = pos0.Add(speed.Scale(DeltaTime));
+			collision = null; // since we have limited the rib
 		}
 
 		public void Clip(List<Rib> ribs)

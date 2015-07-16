@@ -90,6 +90,15 @@ namespace chasegame
 			return X * v.X + Y * v.Y;
 		}
 
+		// return a tangental projection
+		public Vec Project(Vec v) {
+			return v.Scale(this.Scalar(v)/v.Length2);
+		}
+
+		public Vec Normal(Vec v) {
+			return this.Subtract(Project(v));
+		}
+
 		public override string ToString() {
 			return string.Format("({0},{1})", X, Y);
 		}

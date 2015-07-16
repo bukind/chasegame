@@ -36,9 +36,8 @@ namespace chasegame
 			identity = getIdentity();
 		}
 
-        public Sprite(Bitmap theimg, double themass)
+		public Sprite(Bitmap theimg, double themass) : this()
         {
-			identity = getIdentity();
             image = theimg;
 			Speed = new Vec();
             alpha = omega = 0.0;
@@ -48,10 +47,25 @@ namespace chasegame
                 themass = init * init;
             }
             mass = themass;
-            scale = (Math.Sqrt(mass) / init) * 0.5;
-            radius = init * 2 * scale;
+			radius = Math.Sqrt(mass);
+            scale = radius / init * 0.5;
 			Position = new Vec(image.Size).Scale(scale);
         }
+
+		public Sprite(Bitmap theimg, Sprite one, Sprite two) : this(theimg, one.mass + two.mass)
+		{
+			// now calculate the position, speed and rotation
+			double invertmass = 1.0/mass;
+			Position = one.Position.Scale(one.Mass).Add(two.Position.Scale(two.Mass)).Scale(invertmass);
+			Speed = one.Speed.Scale(one.Mass).Add(two.Speed.Scale(two.mass)).Scale(invertmass);
+			alpha = (one.alpha * one.AngularMass + two.alpha * two.AngularMass) / AngularMass;
+			// sum up all moments of rotation
+			double totalRotationMomentum = 
+				one.Mass * one.Position.Subtract(Position).Normal(one.Speed).Length +
+				two.Mass * two.Position.Subtract(Position).Normal(two.Speed).Length +
+				one.AngularMass * one.omega + two.AngularMass * two.omega;
+			omega = totalRotationMomentum / AngularMass;
+		}
 
 		public bool IsValid() {
 			return image != null;
@@ -61,14 +75,10 @@ namespace chasegame
             get { return omega; }
             set { omega = value; }
         }
-
-		public double Radius {
-			get { return radius; }
-		}
-
-		public int Id {
-			get { return identity; }
-		}
+		public double Radius { get { return radius; } }
+		public int Id { get { return identity; } }
+		public double Mass { get { return mass; } }
+		public double AngularMass { get { return mass * radius * radius / 2.0; } }
 
 		public void Update(Rib rib) {
 			Position = rib.EndPos;
@@ -103,9 +113,9 @@ namespace chasegame
         }
         */
 
-		public void MakeMove(double dt, List<Rib> ribs)
+		public void MakeMove(double starttime, double endtime, List<Rib> ribs)
 		{
-			Rib r = new Rib(this, dt);
+			Rib r = new Rib(this, endtime, starttime);
 			r.Clip(ribs);
 			ribs.Add(r);
 		}
