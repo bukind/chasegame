@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libtest", "libtest\libtest.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test", "test\test.csproj", "{33C7E217-56D1-4777-B347-D7667466F82D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "colors", "colors\colors.csproj", "{7A54F487-CFC5-434F-9DAB-83E650D29DCD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -27,6 +29,10 @@ Global
 		{5441DE65-4175-4CB6-B5E2-63105D80980A}.Debug|x86.Build.0 = Debug|x86
 		{5441DE65-4175-4CB6-B5E2-63105D80980A}.Release|x86.ActiveCfg = Release|x86
 		{5441DE65-4175-4CB6-B5E2-63105D80980A}.Release|x86.Build.0 = Release|x86
+		{7A54F487-CFC5-434F-9DAB-83E650D29DCD}.Debug|x86.ActiveCfg = Debug|x86
+		{7A54F487-CFC5-434F-9DAB-83E650D29DCD}.Debug|x86.Build.0 = Debug|x86
+		{7A54F487-CFC5-434F-9DAB-83E650D29DCD}.Release|x86.ActiveCfg = Release|x86
+		{7A54F487-CFC5-434F-9DAB-83E650D29DCD}.Release|x86.Build.0 = Release|x86
 		{DA4273EB-A41D-4AE2-ABB4-401913C9322C}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{DA4273EB-A41D-4AE2-ABB4-401913C9322C}.Debug|x86.Build.0 = Debug|Any CPU
 		{DA4273EB-A41D-4AE2-ABB4-401913C9322C}.Release|x86.ActiveCfg = Release|Any CPU

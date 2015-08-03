@@ -163,6 +163,7 @@ namespace chasegame
 				}
 			}
 			sprites = new List<Sprite>(dict.Keys);
+			sprites.Sort((a,b) => b.Mass.CompareTo(a.Mass));
             t0 = now;
         }
 

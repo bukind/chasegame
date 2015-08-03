@@ -58,7 +58,7 @@ namespace chasegame
 			double invertmass = 1.0/mass;
 			Position = one.Position.Scale(one.Mass).Add(two.Position.Scale(two.Mass)).Scale(invertmass);
 			Speed = one.Speed.Scale(one.Mass).Add(two.Speed.Scale(two.mass)).Scale(invertmass);
-			alpha = (one.alpha * one.AngularMass + two.alpha * two.AngularMass) / AngularMass;
+			alpha = (Math.IEEERemainder(one.alpha,Math.PI*2) * one.AngularMass + Math.IEEERemainder(two.alpha,Math.PI*2) * two.AngularMass) / AngularMass;
 			// sum up all moments of rotation
 			double totalRotationMomentum = 
 				one.Mass * one.Position.Subtract(Position).Normal(one.Speed).Length +
