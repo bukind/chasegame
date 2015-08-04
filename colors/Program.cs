@@ -15,7 +15,7 @@ namespace colors
         {
             Size = new Size(600, 600);
             BackColor = Color.Black;
-
+            /*
             timer = new Timer (new Container ());
             timer.Interval = 100;
             timer.Enabled = true;
@@ -23,6 +23,32 @@ namespace colors
 
             start = DateTime.Now;
             speed = 2.0;
+            */
+
+            /*
+            var obj = new Label ();
+            obj.Parent = this;
+            obj.Dock = DockStyle.Fill;
+            obj.BackColor = Color.Green;
+            */
+
+            var table = new TableLayoutPanel ();
+            table.Parent = this;
+            table.ColumnCount = 3;
+            table.RowCount = 3;
+            table.Dock = DockStyle.Fill;
+            table.Padding = new Padding (0);
+            table.ColumnStyles.
+
+            for (int i = 0; i < 9; ++i) {
+                var obj = new Label();
+                obj.Dock = DockStyle.Fill;
+                obj.Parent = table;
+                table.Controls.Add(obj);
+                obj.Text = "#" + i.ToString();
+                int c = (int)((i + 1) / 10.0 * 255);
+                obj.BackColor = Color.FromArgb (c, c, c);
+            }
 
             CenterToScreen ();
         }
